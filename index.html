@@ -2,7 +2,34 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Coaching Manager</title>
+<title>Student Manager</title>
+
+<style>
+body{
+font-family:Arial;
+padding:20px;
+}
+
+input{
+display:block;
+margin:6px 0;
+padding:8px;
+width:230px;
+}
+
+button{
+padding:8px 15px;
+cursor:pointer;
+}
+
+.student{
+background:#f2f2f2;
+padding:10px;
+margin:6px 0;
+border-radius:5px;
+}
+</style>
+
 </head>
 
 <body>
@@ -13,63 +40,67 @@
 <input id="father" placeholder="Father Name">
 <input id="mobile" placeholder="Mobile">
 <input id="course" placeholder="Course">
-<input id="fees" placeholder="Total Fees">
+<input id="fees" placeholder="Fees">
 
-<button onclick="save()">Save</button>
+<button onclick="saveStudent()">Save</button>
 
 <h2>Student List</h2>
 
-<div id="students"></div>
+<div id="list"></div>
 
 <script>
 
-async function save(){
+async function saveStudent(){
 
 let data={
-name:name.value,
-father:father.value,
-mobile:mobile.value,
-course:course.value,
-totalFees:fees.value,
-paidFees:0
+name:document.getElementById("name").value,
+father:document.getElementById("father").value,
+mobile:document.getElementById("mobile").value,
+course:document.getElementById("course").value,
+fees:document.getElementById("fees").value
 }
 
 await fetch("/addStudent",{
-
 method:"POST",
-headers:{"Content-Type":"application/json"},
+headers:{
+"Content-Type":"application/json"
+},
 body:JSON.stringify(data)
-
 })
 
-load()
+loadStudents()
 
 }
 
-async function load(){
+async function loadStudents(){
 
 let res=await fetch("/students")
 
-let data=await res.json()
+let students=await res.json()
 
 let html=""
 
-data.forEach(s=>{
+students.forEach(s=>{
 
-html+=`<p>
-${s.name} - ${s.course} - Fees:${s.totalFees}
-</p>`
+html+=`
+<div class="student">
+<b>${s.name}</b><br>
+Father: ${s.father}<br>
+Mobile: ${s.mobile}<br>
+Course: ${s.course}<br>
+Fees: ${s.fees}
+</div>
+`
 
 })
 
-students.innerHTML=html
+document.getElementById("list").innerHTML=html
 
 }
 
-load()
+loadStudents()
 
 </script>
 
 </body>
-
 </html>
