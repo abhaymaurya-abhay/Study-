@@ -1,50 +1,32 @@
 const express = require("express");
 const path = require("path");
-const { MongoClient } = require("mongodb");
 
 const app = express();
 
 app.use(express.json());
 app.use(express.static(__dirname));
 
-const uri = "mongodb+srv://abhaymauryafb_db_user:Z7T209jAG8yBAcoq@abhay.m7i5gvj.mongodb.net/?retryWrites=true&w=majority";
+let students = [];
 
-const client = new MongoClient(uri);
-
-let studentsCollection;
-
-async function start(){
-
-await client.connect();
-
-const db = client.db("studentDB");
-
-studentsCollection = db.collection("students");
-
-console.log("MongoDB Connected");
-
-}
-
-start();
-
-app.get("/",(req,res)=>{
+/* Home page */
+app.get("/", (req,res)=>{
 res.sendFile(path.join(__dirname,"index.html"));
 });
 
-app.post("/addStudent",async(req,res)=>{
-
-await studentsCollection.insertOne(req.body);
-
-res.json({status:"saved"});
-
+/* Save student */
+app.post("/addStudent",(req,res)=>{
+students.push(req.body);
+res.json({message:"saved"});
 });
 
-app.get("/students",async(req,res)=>{
+/* Get students */
+app.get("/students",(req,res)=>{
+res.json(students);
+});
 
-const data = await studentsCollection.find().toArray();
-
-res.json(data);
-
+/* Test route */
+app.get("/test",(req,res)=>{
+res.send("server working");
 });
 
 const PORT = process.env.PORT || 3000;
