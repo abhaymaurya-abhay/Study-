@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coaching Manager</title>
+</head>
+
+<body>
+
+<h2>Add Student</h2>
+
+<input id="name" placeholder="Student Name">
+<input id="father" placeholder="Father Name">
+<input id="mobile" placeholder="Mobile">
+<input id="course" placeholder="Course">
+<input id="fees" placeholder="Total Fees">
+
+<button onclick="save()">Save</button>
+
+<h2>Student List</h2>
+
+<div id="students"></div>
+
+<script>
+
+async function save(){
+
+let data={
+name:name.value,
+father:father.value,
+mobile:mobile.value,
+course:course.value,
+totalFees:fees.value,
+paidFees:0
+}
+
+await fetch("/addStudent",{
+
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(data)
+
+})
+
+load()
+
+}
+
+async function load(){
+
+let res=await fetch("/students")
+
+let data=await res.json()
+
+let html=""
+
+data.forEach(s=>{
+
+html+=`<p>
+${s.name} - ${s.course} - Fees:${s.totalFees}
+</p>`
+
+})
+
+students.innerHTML=html
+
+}
+
+load()
+
+</script>
+
+</body>
+
+</html>
