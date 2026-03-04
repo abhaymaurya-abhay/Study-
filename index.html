@@ -1,35 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="hi">
 <head>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Manager</title>
 
 <style>
 body{
-font-family:Arial;
+font-family: Arial, sans-serif;
 padding:20px;
+background:#fafafa;
+}
+
+h2{
+margin-top:20px;
 }
 
 input{
 display:block;
 margin:6px 0;
-padding:8px;
-width:230px;
+padding:10px;
+width:100%;
+max-width:300px;
+border:1px solid #ccc;
+border-radius:4px;
 }
 
 button{
-padding:8px 15px;
+padding:10px 15px;
+margin-top:5px;
+background:#2d89ef;
+color:white;
+border:none;
+border-radius:4px;
 cursor:pointer;
+}
+
+button:hover{
+background:#1b5fbf;
 }
 
 .student{
 background:#f2f2f2;
+margin:8px 0;
 padding:10px;
-margin:6px 0;
-border-radius:5px;
+border-radius:6px;
 }
-</style>
 
+</style>
 </head>
 
 <body>
@@ -38,7 +56,7 @@ border-radius:5px;
 
 <input id="name" placeholder="Student Name">
 <input id="father" placeholder="Father Name">
-<input id="mobile" placeholder="Mobile">
+<input id="mobile" placeholder="Mobile Number">
 <input id="course" placeholder="Course">
 <input id="fees" placeholder="Fees">
 
@@ -52,12 +70,18 @@ border-radius:5px;
 
 async function saveStudent(){
 
+let name=document.getElementById("name").value
+let father=document.getElementById("father").value
+let mobile=document.getElementById("mobile").value
+let course=document.getElementById("course").value
+let fees=document.getElementById("fees").value
+
 let data={
-name:document.getElementById("name").value,
-father:document.getElementById("father").value,
-mobile:document.getElementById("mobile").value,
-course:document.getElementById("course").value,
-fees:document.getElementById("fees").value
+name:name,
+father:father,
+mobile:mobile,
+course:course,
+fees:fees
 }
 
 await fetch("/addStudent",{
@@ -68,7 +92,19 @@ headers:{
 body:JSON.stringify(data)
 })
 
+clearForm()
+
 loadStudents()
+
+}
+
+function clearForm(){
+
+document.getElementById("name").value=""
+document.getElementById("father").value=""
+document.getElementById("mobile").value=""
+document.getElementById("course").value=""
+document.getElementById("fees").value=""
 
 }
 
@@ -80,7 +116,7 @@ let students=await res.json()
 
 let html=""
 
-students.forEach(s=>{
+students.forEach(function(s){
 
 html+=`
 <div class="student">
